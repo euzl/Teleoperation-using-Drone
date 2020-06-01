@@ -1,10 +1,15 @@
 from CoDrone.codrone import *
 
 if __name__ == '__main__':
+
     drone = CoDrone()
-    drone.connect(portName="tty.SLAB_USBtoUART")
+    drone.open("/dev/tty.SLAB_USBtoUART")
+    
+    #drone.connect()
     sleep(1)
-    if drone.isConnected():
+
+    while drone.isConnected():
+
         drone.setEyeDefaultRGB(0, 255, 0)
         drone.setArmRGB(100, 0, 0)
         sleep(1)
@@ -12,7 +17,7 @@ if __name__ == '__main__':
         drone.setArmRGB(0, 255, 0)
         sleep(1)
 
-        drone.sendLinkDisconnect()
-        sleep(0.2)
+    drone.sendLinkDisconnect()
+    sleep(0.2)
 
     drone.close()
