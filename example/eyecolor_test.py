@@ -3,9 +3,10 @@ from CoDrone.codrone import *
 if __name__ == '__main__':
 
     drone = CoDrone()
-    drone.open("COM5")
+    drone.pair()
+    #drone.open("COM5")
     
-    #drone.connect()
+    #drone.connect(portName="COM5")
     sleep(1)
 
     while drone.isConnected():
@@ -17,7 +18,7 @@ if __name__ == '__main__':
         drone.setArmRGB(0, 255, 0)
         sleep(1)
 
-    #drone.sendLinkDisconnect()
+    drone.sendLinkDisconnect()
     sleep(0.2)
 
     drone.close()
