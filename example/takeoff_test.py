@@ -6,7 +6,7 @@ from e_drone.protocol import *
 if __name__ == '__main__':
 
     drone = Drone()
-    drone.open("tty.SLAB_USBtoUART")
+    drone.open("COM5")
 
     print("TakeOff")
     drone.sendTakeOff()

@@ -6,7 +6,7 @@ from e_drone.protocol import *
 if __name__ == '__main__':
 
     drone = Drone()
-    drone.open("tty.SLAB_USBtoUART")
+    drone.open("COM5")
 
     drone.sendBuzzer(BuzzerMode.Scale, BuzzerScale.C4.value, 500)
     sleep(1)

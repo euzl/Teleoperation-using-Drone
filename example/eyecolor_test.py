@@ -3,9 +3,10 @@ from CoDrone.codrone import *
 if __name__ == '__main__':
 
     drone = CoDrone()
-    drone.open("/dev/tty.SLAB_USBtoUART")
+    drone.pair()
+    #drone.open("COM5")
     
-    #drone.connect()
+    #drone.connect(portName="COM5")
     sleep(1)
 
     while drone.isConnected():
