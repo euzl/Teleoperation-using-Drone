@@ -3,7 +3,7 @@ from CoDrone.codrone import *
 if __name__ == '__main__':
 
     drone = CoDrone()
-    drone.open("/dev/tty.SLAB_USBtoUART")
+    drone.open("COM5")
     
     #drone.connect()
     sleep(1)
@@ -17,7 +17,7 @@ if __name__ == '__main__':
         drone.setArmRGB(0, 255, 0)
         sleep(1)
 
-    drone.sendLinkDisconnect()
+    #drone.sendLinkDisconnect()
     sleep(0.2)
 
     drone.close()
