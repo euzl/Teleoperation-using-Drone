@@ -1,15 +1,13 @@
-from CoDrone.codrone import *
+import CoDrone
 
 if __name__ == '__main__':
 
-    drone = CoDrone()
+    drone = CoDrone().CoDrone()
     drone.pair()
-    #drone.open("COM5")
-    
-    #drone.connect(portName="COM5")
+
     sleep(1)
 
-    while drone.isConnected():
+    if drone.isConnected():
 
         drone.setEyeDefaultRGB(0, 255, 0)
         drone.setArmRGB(100, 0, 0)
@@ -22,3 +20,4 @@ if __name__ == '__main__':
     sleep(0.2)
 
     drone.close()
+
