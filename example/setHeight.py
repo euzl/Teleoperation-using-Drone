@@ -40,6 +40,7 @@ def main():
     drone.takeoff()
     getPosition(drone)
     setHeight(oHeight, drone)
+    # drone.go_to_height(oHeight)  # 기본 제공 이었네..?
     getPosition(drone)
     drone.hover(3)
     print('Land')
