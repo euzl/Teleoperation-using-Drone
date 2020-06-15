@@ -11,7 +11,6 @@ def main():
         height = drone.get_height()  # 고
         print("x={} y={} z={}".format(position.X, position.Y, height))  # 단위(mm)
 
-        
 
 if __name__ == '__main__':
     main()

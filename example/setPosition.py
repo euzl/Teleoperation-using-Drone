@@ -1,5 +1,5 @@
 import CoDrone
-from CoDrone import Direction
+from CoDrone.system import Direction
 
 
 def getPosition(drone):
@@ -12,12 +12,18 @@ def main():
     drone = CoDrone.CoDrone()
     drone.connect()
 
-
     drone.takeoff()
-    drone.go(Direction.FORWARD, 3, 10)
-    # drone.turn(Direction.LEFT, 3, 30)  # 돌려서 이동하려 했었다.
-    drone.go(Direction.LEFT, 2, 10)
-
+    getPosition(drone)
+    drone.move(-5, 4, 0, 0)  # move(roll 좌우, pitch 전후, yaw, throttle)
+    # drone.go(Direction.FORWARD, 0.5)
+    # print('forward')
+    # getPosition(drone)
+    # drone.go(Direction.LEFT, 1)
+    # print('left')
+    getPosition(drone)
+    drone.hover(3)
+    getPosition(drone)
+    print('land')
     getPosition(drone)
     drone.land()
 
