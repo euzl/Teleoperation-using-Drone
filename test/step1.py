@@ -4,17 +4,24 @@ from CoDrone.system import Direction
 from time import sleep
 
 
+errorRange = 50  # 오차범위
+moveRange = 150  # 움직였다고 판단할 거리
+
+
 def setHeight(_mHeight, _slave):
     while True:
         _sHeight = _slave.get_height()
-        if _mHeight - 100 <= _sHeight <= _mHeight + 100:
+        if _mHeight - errorRange <= _sHeight <= _mHeight + errorRange:
+            print('hit')
             return
-        elif _sHeight < _mHeight - 100:
+        elif _sHeight < _mHeight - errorRange:
             _slave.go(Direction.UP)
             sleep(0.2)
-        elif _sHeight > _mHeight + 100:
+            print('up')
+        elif _sHeight > _mHeight + errorRange:
             _slave.go(Direction.DOWN)
             sleep(0.2)
+            print('down')
 
 
 def main():
@@ -40,7 +47,7 @@ def main():
         # 키보드로 콘솔창에 'q'를 누르면 드론이 착륙하게 만드는 코드인데
         # 한 번 성공하고 그 이후로 안 되네요
         # $pip3 install keyboard
-        # 로 깔아야 합니다.
+        # 로 keyboard를 설치한 다음 실행해야 합니다.
         if keyboard.is_pressed('q'):
             print('드론을 착륙시킵니다.')
             slave.land()
@@ -49,11 +56,11 @@ def main():
             # print('emergency_stop')
             break
 
-        # master의 전 높이 대비 +- 150의 차이가 있으면 slave가 움직이도록
-        if mHeight > bHeight + 150 or mHeight < bHeight - 150:
+        # master의 전 높이 대비 +- moveRange 만큼의 차이가 있으면 slave가 움직이도록
+        if mHeight > bHeight + moveRange or mHeight < bHeight - moveRange:
             setHeight(mHeight, slave)
 
-        bHeight = mHeight
+        bHeight = mHeight  # 이전 높이 저장
 
 
 if __name__ == '__main__':
