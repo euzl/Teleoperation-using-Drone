@@ -13,16 +13,16 @@ def setHeight(_mHeight, _slave):
     while True:
         _sHeight = _slave.get_height()
         if _mHeight - errorRange <= _sHeight <= _mHeight + errorRange:
-            print('hit')
+            print('[hit]')
             return
         elif _sHeight < _mHeight - errorRange:
             _slave.go(Direction.UP)
             sleep(0.2)
-            print('up')
+            print('[up]')
         elif _sHeight > _mHeight + errorRange:
             _slave.go(Direction.DOWN)
             sleep(0.2)
-            print('down')
+            print('[down]')
 
 
 def main():
@@ -49,13 +49,13 @@ def main():
         # 한 번 성공하고 그 이후로 안 되네요
         # $pip3 install keyboard
         # 로 keyboard를 설치한 다음 실행해야 합니다.
-        if keyboard.is_pressed('q'):
-            print('드론을 착륙시킵니다.')
-            slave.land()
-            print('land')
-            # slave.emergency_stop()
-            # print('emergency_stop')
+        # 성공 : q를 계속 누르고 계세요! ex) qqqqqqqqqqqqqq
+        if keyboard.is_pressed('q'):  # 키보드에서 'q'가 입력되면 while문 탈출
+            print('[Keyboard input occur: Quit!]')
             break
+        elif not slave.isConnected():  # slave 연결이 끊기면 프로그램 종료
+            print('[Slave Disconnected]')
+            return
 
         # master의 전 높이 대비 moveRange 만큼의 차이가 있으면 slave가 움직이도록
         if abs(mHeight-bHeight) > moveRange:
@@ -69,6 +69,14 @@ def main():
         bHeight = mHeight
         bX = mPosition.X
         bY = mPosition.Y
+
+    print('드론을 착륙시킵니다.')
+    slave.arm_pattern()  # LED 효과
+    print('Land')
+    slave.land()  # 착륙
+    # 연결해제 -> 여기까지 성공했다면 배터리 안 빼도 다시 연결 됩니다.
+    slave.disconnect()
+    master.disconnect()
 
 
 if __name__ == '__main__':
