@@ -1,3 +1,4 @@
+# step 2 : 높이 + 위치조정 (master도 날 때)
 import CoDrone
 import keyboard
 from CoDrone.system import Direction
@@ -6,11 +7,15 @@ from time import sleep
 
 
 errorRange = 50  # 오차범위
-moveRange = 150  # 움직였다고 판단할 거리
-heightRange = 70  # 움직였다고 판단할 거리 height
+heightRange = 30  # 움직였다고 판단할 거리 height
+posiRange = 5  # position (x, y) 변화 인지 거리
 
-# 키보드로 콘솔창에 'q'를 누르면 드론이 착륙하게 만드는 코드
+
 def stop(_master, _slave):
+    # 키보드로 콘솔창에 'q'를 누르면 드론이 착륙하게 만드는 코드
+    # $pip3 install keyboard
+    # 로 keyboard를 설치한 다음 실행해야 합니다.
+    # 성공 : q를 계속 누르고 계세요! ex) qqqqqqqqqqqqqq
     if keyboard.is_pressed('q'):  # 키보드에서 'q'가 입력되면 while문 탈출
         print('[Keyboard input occur: Quit!]')
         # 착륙에 성공할 때까지 LED 효과
@@ -25,8 +30,6 @@ def stop(_master, _slave):
 def setHeight(_master, _mHeight, _slave):
     print('목표높이 : ', _mHeight)
     while True:
-        _master.hover()
-        print('hover')
         _sHeight = _slave.get_height()
         print('현재높이 : ', _sHeight)
 
@@ -37,25 +40,30 @@ def setHeight(_master, _mHeight, _slave):
             print('[hit]')
             return
         elif _sHeight < _mHeight - errorRange:
-            _slave.go(Direction.UP, 0, 100)
-            # sleep(0.2)
+            _slave.go(Direction.UP)
+            sleep(0.2)
             print('[up]')
         elif _sHeight > _mHeight + errorRange:
-            _slave.go(Direction.DOWN, 0, 100)
-            # sleep(0.2)
+            _slave.go(Direction.DOWN)
+            sleep(0.2)
             print('[down]')
 
 
 def main():
     master = CoDrone.CoDrone()
-    master.connect("None", "COM7", False)
+    master.connect("None", "COM5", False)
     slave = CoDrone.CoDrone()
-    slave.connect("None", "COM5", False)
+    slave.connect("None", "COM7", False)
 
+    master.takeoff()
     bHeight = master.get_height()  # 고도
     if bHeight > 20:  # 마스터의 높이가 20이상이면 slave 날기 시작
         slave.takeoff()
 
+    # master의 이전 좌표값(움직임 추적용) 초기화
+    bHeight = 0
+    bX = 0
+    bY = 0
 
     while True:
         master.arm_off()
@@ -72,13 +80,29 @@ def main():
         if stop(master, slave):
             break
 
-        # master의 전 높이 대비 +- moveRange 만큼의 차이가 있으면 slave가 움직이도록
+        # master의 전 높이 대비 heightRange 만큼의 차이가 있으면 slave가 움직이도록
         if abs(mHeight - bHeight) > heightRange:
             print('[height change!]')
             # LED 효과
             master.arm_strobe()
             slave.arm_strobe()
             setHeight(master, mHeight, slave)
+
+        # master의 좌표가 posiRange만큼 차이가 생기면 움직이도록
+        if abs(bX - mPosition.X) + abs(bY - mPosition.Y) > posiRange:
+            print('[position change!]')
+            # LED 효과
+            master.arm_strobe()
+            slave.arm_strobe()
+            slave.move(abs(mPosition.Y - bY)/20, abs(bX - mPosition.X)/20, 0, 0)  # move(roll 좌우, pitch 전후, yaw = 0, throttle = 0)
+
+        # master의 이전 좌표값 저장
+        bHeight = mHeight
+        bX = mPosition.X
+        bY = mPosition.Y
+
+    print('드론을 착륙시킵니다.')
+    slave.arm_pattern()  # LED 효과
 
     print('Land')
     slave.land()  # 착륙
