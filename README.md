@@ -8,9 +8,9 @@
 # 1. 코드론 모듈을 설치한다.
 $ pip3 install CoDrone
 
-# 2. sre 폴더로 이동한다.
+# 2. src 폴더로 이동한다.
 $ cd src
 
 # 3. 원하는 코드를 실행한다.
-$ python step1.py
+$ python sync_height.py
 ```
